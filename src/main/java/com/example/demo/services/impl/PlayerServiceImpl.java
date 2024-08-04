@@ -1,8 +1,10 @@
 package com.example.demo.services.impl;
 
+
 import com.example.demo.entities.PlayerEntity;
 import com.example.demo.models.Player;
-import com.example.demo.repositories.PlayerJpaRepository;
+
+import com.example.demo.repositories.jpa.PlayerJpaRepository;
 import com.example.demo.services.PlayerServices;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
@@ -16,10 +18,11 @@ import java.util.Optional;
 public class PlayerServiceImpl implements PlayerServices {
 
     @Autowired
-    PlayerJpaRepository playerJpaRepository;
+    private PlayerJpaRepository playerJpaRepository;
 
     @Autowired
-    ModelMapper modelMapper;
+    private ModelMapper modelMapper;
+
     @Override
     public Player getPlayerById(Long id) {
         PlayerEntity playerEntity = playerJpaRepository.getReferenceById(id);
@@ -33,14 +36,45 @@ public class PlayerServiceImpl implements PlayerServices {
     @Override
     public Player savePlayer(Player player) {
         Optional<PlayerEntity> playerEntityOptional = playerJpaRepository.findByUserNameOrEmail(
-                player.getUserName(), player.getEmail());
+                player.getUserName(), player.getEmail()
+        );
         if(playerEntityOptional.isEmpty()) {
             PlayerEntity playerEntity = modelMapper.map(player, PlayerEntity.class);
             PlayerEntity playerEntitySaved = playerJpaRepository.save(playerEntity);
             return modelMapper.map(playerEntitySaved, Player.class);
         } else {
-            //throw new EntityNotFoundException();
             return null;
         }
     }
+
+    @Override
+    public Player getPlayerByUserNameAndPassword(String userName, String password) {
+        Optional<PlayerEntity> playerEntityOptional = playerJpaRepository.findByUserNameAndPassword(userName, password);
+        if(playerEntityOptional.isPresent()) {
+            return modelMapper.map(playerEntityOptional.get(), Player.class);
+        } else {
+            throw new EntityNotFoundException("Username or password invalid!");
+        }
+    }
+
+    @Override
+    public Player getPlayerByEmailAndPassword(String email, String password) {
+        Optional<PlayerEntity> playerEntityOptional = playerJpaRepository.findByEmailAndPassword(email, password);
+        if(playerEntityOptional.isPresent()) {
+            return modelMapper.map(playerEntityOptional.get(), Player.class);
+        } else {
+            throw new EntityNotFoundException("Email or password invalid!");
+        }
+    }
+
+    @Override
+    public Player getPlayerByUserNameOrEmailAndPassword(String identity, String password) {
+        Optional<PlayerEntity> playerEntityOptional = playerJpaRepository.findByUserNameOrEmailAndPassword(identity, password);
+        if(playerEntityOptional.isPresent()) {
+            return modelMapper.map(playerEntityOptional.get(), Player.class);
+        } else {
+            throw new EntityNotFoundException("Some parameters are incorrect!");
+        }
+    }
+
 }

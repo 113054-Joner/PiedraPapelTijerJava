@@ -5,37 +5,28 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Entity
-@Table(name = "players")
+@Table(name = "games")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PlayerEntity {
+public class GameEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
-    private String userName;
+    private String code;
 
     @Column
-    private String password;
+    private String name;
 
+    @Lob
     @Column
-    private String email;
+    private String description;
 
+    @Lob
     @Column
-    private String avatar;
-
-    @Column
-    private LocalDateTime lastLogin;
-
-    @Column
-    private LocalDateTime createdAt;
-
-    @Column
-    private LocalDateTime updatedAt;
+    private String rules;
 }

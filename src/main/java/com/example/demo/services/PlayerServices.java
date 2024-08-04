@@ -12,4 +12,11 @@ public interface PlayerServices {
 
     Player savePlayer(Player player);
 
+    //LOGGIN
+    Player getPlayerByUserNameAndPassword(String userName, String password);
+
+    Player getPlayerByEmailAndPassword(String email, String password);
+
+    Player getPlayerByUserNameOrEmailAndPassword(String identity, String password);
+
 }

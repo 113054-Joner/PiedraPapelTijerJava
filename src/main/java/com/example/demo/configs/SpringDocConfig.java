@@ -1,4 +1,5 @@
-package com.example.demo.config;
+package com.example.demo.configs;
+
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.core.jackson.ModelResolver;
